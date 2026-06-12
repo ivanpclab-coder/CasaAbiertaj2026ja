@@ -1,0 +1,41 @@
+/* Estilos base optimizados para móvil */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Mejoras táctiles */
+a, button {
+    touch-action: manipulation;
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Ajustes de espaciado para pantallas pequeñas */
+@media (max-width: 768px) {
+    h1, h2, h3 {
+        line-height: 1.2;
+    }
+    
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Eliminación de estilos de interacción que ya no se usan */
+/* Se mantuvieron solo los estilos visuales del contenido */

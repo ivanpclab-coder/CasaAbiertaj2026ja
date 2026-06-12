@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0A0E27">
+    <title>Casa Abierta Jahibé 2026 | Robótica e Innovación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jahibe: {
+                            azul: '#003377',
+                            azulClaro: '#0088FF',
+                            naranja: '#FF7700',
+                            oscuro: '#0A0E27',
+                            gris: '#1E2440'
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        futurista: ['Orbitron', 'Rajdhani', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 0 15px rgba(0, 136, 255, 0.7);
+            }
+            .text-shadow-naranja {
+                text-shadow: 0 0 15px rgba(255, 119, 0, 0.6);
+            }
+            .borde-luz {
+                box-shadow: 0 0 10px rgba(0, 136, 255, 0.5), inset 0 0 10px rgba(0, 136, 255, 0.3);
+            }
+            .borde-luz-naranja {
+                box-shadow: 0 0 10px rgba(255, 119, 0, 0.5), inset 0 0 10px rgba(255, 119, 0, 0.3);
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .gradiente-futurista {
+                background: linear-gradient(135deg, #0A0E27 0%, #1E2440 50%, #003377 100%);
+            }
+            .gradiente-azul {
+                background: linear-gradient(90deg, #003377 0%, #0088FF 100%);
+            }
+            .gradiente-naranja {
+                background: linear-gradient(90deg, #FF7700 0%, #FFAA33 100%);
+            }
+            .animacion-flotar {
+                animation: flotar 4s ease-in-out infinite;
+            }
+            @keyframes flotar {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+                100% { transform: translateY(0px); }
+            }
+            .glow {
+                filter: drop-shadow(0 0 8px currentColor);
+            }
+            .app-container {
+                min-height: 100vh;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            .boton-app {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            /* Estilo unificado para TODAS las imágenes de estaciones */
+            .img-estacion {
+                width: 100%;
+                height: 140px;
+                object-fit: cover;
+                border-radius: 6px;
+                margin-bottom: 12px;
+                border: 1px solid rgba(255, 119, 0, 0.2);
+                background-color: #1E2440;
+            }
+            /* Estilos para galería */
+            .img-galeria {
+                width: 100%;
+                height: 220px;
+                object-fit: cover;
+                border-radius: 8px;
+                transition: transform 0.3s ease;
+            }
+            .img-galeria:hover {
+                transform: scale(1.03);
+            }
+            /* Estilos mejorados para carrusel */
+            .carrusel-contenedor {
+                position: relative;
+                max-width: 850px;
+                height: 450px;
+                margin: 0 auto;
+                overflow: hidden;
+                border-radius: 12px;
+                border: 1px solid rgba(0, 136, 255, 0.3);
+                box-shadow: 0 0 25px rgba(0, 136, 255, 0.25);
+                background-color: #0A0E27;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .carrusel-imagen {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background-color: #0A0E27;
+                opacity: 0;
+                transition: opacity 0.8s ease-in-out;
+                padding: 1rem;
+            }
+            .carrusel-imagen.activa {
+                opacity: 1;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-jahibe-oscuro text-white font-sans app-container">
+    <!-- Barra de navegación -->
+    <nav class="fixed w-full top-0 z-50 bg-jahibe-oscuro/90 backdrop-blur-md border-b border-jahibe-azul/30 px-4 py-3 safe-top">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <img src="logo.png" alt="Logo Jahibé 2026" class="h-10 sm:h-12 w-auto object-contain">
+                <span class="text-[clamp(0.9rem,3vw,1.3rem)] font-futurista font-bold text-jahibe-azulClaro">JAHIBÉ 2026</span>
+            </div>
+            <div class="hidden md:flex gap-6 font-futurista text-sm">
+                <a href="#inicio" class="text-jahibe-azulClaro">INICIO</a>
+                <a href="#institucion" class="hover:text-jahibe-azulClaro transition-colors">INSTITUCIÓN</a>
+                <a href="#proyectos" class="hover:text-jahibe-azulClaro transition-colors">PROYECTOS</a>
+                <a href="#galeria" class="hover:text-jahibe-azulClaro transition-colors">GALERÍA</a>
+                <a href="#agradecimiento" class="hover:text-jahibe-azulClaro transition-colors">AGRADECIMIENTOS</a>
+            </div>
+            <button class="md:hidden text-2xl boton-app">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Sección de Inicio -->
+    <section id="inicio" class="min-h-screen flex flex-col items-center justify-center pt-16 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-20">
+            <div class="absolute w-full h-full" style="background-image: url('fondo.jpeg'); background-size: cover; background-position: center; filter: brightness(0.2);"></div>
+        </div>
+        
+        <div class="container mx-auto z-10 text-center">
+            <img src="portada.jpeg" alt="Casa Abierta Jahibé 2026" class="max-w-[240px] sm:max-w-[320px] md:max-w-[450px] mx-auto mb-6 animacion-flotar object-contain">
+            
+            <h1 class="text-[clamp(1.8rem,6vw,4rem)] font-futurista font-extrabold mb-3 text-shadow text-white">
+                CASA ABIERTA <span class="text-jahibe-azulClaro">ROBÓTICA</span>
+            </h1>
+            <h2 class="text-[clamp(1.1rem,4vw,2.2rem)] font-futurista font-semibold mb-6 text-jahibe-naranja text-shadow-naranja">
+                JAHIBÉ 2026
+            </h2>
+            
+            <p class="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-gray-200 mb-8 leading-relaxed">
+                Donde la imaginación se convierte en tecnología, y la innovación transforma el futuro. Dos grandes proyectos creados por nuestros estudiantes: desde la exploración espacial hasta la solución de retos tecnológicos.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mt-6">
+                <a href="#marte" class="gradiente-naranja px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-futurista font-bold text-base sm:text-lg borde-luz-naranja boton-app">
+                    🚀 MISIÓN A MARTE <span class="text-xs sm:text-sm block font-normal">4to EGB</span>
+                </a>
+                <a href="#impulso" class="gradiente-azul px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-futurista font-bold text-base sm:text-lg borde-luz boton-app">
+                    🤖 IMPULSO ROBÓTICO <span class="text-xs sm:text-sm block font-normal">10mo "A" EGB</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <a href="#institucion" class="text-white/70 boton-app">
+                <i class="fa fa-chevron-down text-2xl sm:text-3xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Sección Institucional -->
+    <section id="institucion" class="py-16 px-4 sm:px-6 bg-jahibe-gris/50">
+        <div class="container mx-auto">
+            <h2 class="text-[clamp(1.6rem,5vw,3rem)] font-futurista font-bold text-center mb-12 text-shadow">
+                LA INSTITUCIÓN Y LA <span class="text-jahibe-azulClaro">ROBÓTICA</span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
+                <div class="space-y-5">
+                    <h3 class="text-xl sm:text-2xl font-futurista font-semibold text-jahibe-naranja">¿Qué significa esta Casa Abierta?</h3>
+                    <p class="text-gray-200 text-base sm:text-lg leading-relaxed">
+                        Para la Unidad Educativa Jahibé, la Casa Abierta de Robótica es mucho más que una exposición: es la demostración del aprendizaje significativo, la creatividad y el desarrollo del pensamiento lógico-matemático y científico de nuestros estudiantes.
+                    </p>
+                    <p class="text-gray-200 text-base sm:text-lg leading-relaxed">
+                        Nuestra institución se posiciona a la vanguardia educativa, integrando el <strong>Área de Robótica e Informática</strong> como eje transversal. Aquí, la tecnología no es una materia aislada, sino una herramienta para resolver problemas, investigar y crear soluciones reales.
+                    </p>
+                    
+                    <h3 class="text-xl sm:text-2xl font-futurista font-semibold text-jahibe-naranja mt-6">¿Qué buscamos en nuestros estudiantes?</h3>
+                    <ul class="space-y-3 text-gray-200 text-base sm:text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa fa-check-circle text-jahibe-azulClaro mt-1"></i>
+                            <span>Que expresen sus ideas, creatividad y todo lo aprendido en programación, electrónica y mecánica.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa fa-check-circle text-jahibe-azulClaro mt-1"></i>
+                            <span>Desarrollar oratoria, trabajo colaborativo y pensamiento crítico frente a retos tecnológicos.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa fa-check-circle text-jahibe-azulClaro mt-1"></i>
+                            <span>Comprender que la tecnología transforma vidas y mejora nuestra sociedad.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa fa-check-circle text-jahibe-azulClaro mt-1"></i>
+                            <span>Demostrar que desde edades tempranas somos capaces de crear el futuro.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="relative mt-8 md:mt-0">
+                    <div class="aspect-video rounded-xl overflow-hidden borde-luz">
+                        <img src="institucion.jpeg" alt="Jahibé Robótica" class="w-full h-full object-contain bg-jahibe-oscuro/70 p-6 sm:p-8">
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 sm:w-32 sm:h-32 bg-jahibe-naranja/20 rounded-full blur-2xl z-0"></div>
+                    <div class="absolute -top-4 -left-4 w-24 h-24 sm:w-32 sm:h-32 bg-jahibe-azul/20 rounded-full blur-2xl z-0"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Proyectos -->
+    <section id="proyectos" class="py-16 px-4 sm:px-6">
+        <div class="container mx-auto">
+            <h2 class="text-[clamp(1.6rem,5vw,3rem)] font-futurista font-bold text-center mb-16 text-shadow">
+                NUESTROS <span class="text-jahibe-naranja">PROYECTOS</span>
+            </h2>
+
+            <!-- Proyecto 1: Misión Marte -->
+            <div id="marte" class="mb-24">
+                <div class="grid md:grid-cols-2 gap-8 sm:gap-12 items-center mb-10">
+                    <div class="order-2 md:order-1">
+                        <span class="inline-block bg-jahibe-naranja/20 text-jahibe-naranja px-3 py-1 sm:px-4 sm:py-1 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-4">4TO EGB · 22 ESTUDIANTES</span>
+                        <h3 class="text-[clamp(1.5rem,4vw,2.5rem)] font-futurista font-bold mb-3 sm:mb-4 text-jahibe-naranja text-shadow-naranja">AGENCIA ESPACIAL JAHIBÉ: MISIÓN A MARTE 2026</h3>
+                        
+                        <p class="text-gray-200 text-base sm:text-lg mb-3 sm:mb-4 leading-relaxed">
+                            Este proyecto integra la robótica y el apoyo del área de Inglés, fomentando el pensamiento crítico, la oratoria y el trabajo colaborativo, alineándose con los estándares de innovación educativa de nuestra institución.
+                        </p>
+                        <p class="text-gray-200 text-base sm:text-lg mb-4 sm:mb-6 leading-relaxed">
+                            La temática hace referencia a la aplicación práctica de conocimientos de electrónica básica y programación. Se estructura en 7 estaciones de ingeniería donde se demuestra el uso de sensores lumínicos, control de velocidad, lógica de bloques y sistemas mecánicos.
+                        </p>
+
+                        <h4 class="font-futurista font-semibold text-lg sm:text-xl mb-2 sm:mb-3 text-white">¿Qué demostramos?</h4>
+                        <p class="text-gray-200 mb-4 sm:mb-6 text-sm sm:text-base">
+                            Demostramos que la robótica es una herramienta para resolver desafíos reales, fomentando el pensamiento crítico y el trabajo colaborativo desde una edad temprana.
+                        </p>
+
+                        <div class="mt-4 sm:mt-6">
+                            <p class="text-xs sm:text-sm text-gray-400"><strong>Fecha:</strong> Viernes 12 de junio del 2026 · <strong>Lugar:</strong> Aulas de 3ro BGU</p>
+                        </div>
+                    </div>
+
+                    <div class="order-1 md:order-2 relative">
+                        <div class="rounded-xl overflow-hidden borde-luz-naranja">
+                            <img src="marte.jpeg" alt="Misión a Marte 2026" class="w-full h-auto object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estaciones Marte con archivos PNG -->
+                <div class="mt-12 sm:mt-16 bg-jahibe-gris/40 rounded-xl sm:rounded-2xl p-5 sm:p-8 borde-luz-naranja">
+                    <h4 class="text-center text-xl sm:text-2xl font-futurista font-semibold mb-6 sm:mb-10 text-jahibe-naranja">7 Estaciones / Stands</h4>
+                    
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                        <!-- Estación 1 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="controlmision.png" alt="Control de Misión" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">1. Control de Misión</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Recepción y Check-in. Logística y demostración de oratoria.</p>
+                        </div>
+
+                        <!-- Estación 2 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="energiasolar.png" alt="Estación Solar" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">2. Estación Solar</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Base Marciana con Fotocelda. Concepto: Conversión de Energía.</p>
+                        </div>
+
+                        <!-- Estación 3 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="tunelviento.png" alt="Túnel de Viento" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">3. Túnel de Viento</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Rover con Potenciómetro. Concepto: Resistencia Variable.</p>
+                        </div>
+
+                        <!-- Estación 4 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="pelicula.png" alt="Cine mBlock" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">4. Cine mBlock</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Animaciones y lógica visual. Concepto: Programación por bloques.</p>
+                        </div>
+
+                        <!-- Estación 5 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="ruleta.png" alt="Satélite del Saber" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">5. Satélite del Saber</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Ruleta Electrónica. Concepto: Interdisciplinariedad y conocimientos generales.</p>
+                        </div>
+
+                        <!-- Estación 6 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="fabricaoxigeno.png" alt="Fábrica de Oxígeno" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">6. Fábrica de Oxígeno</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Purificador Mecánico. Concepto: Circuitos cerrados y mecánica aplicada.</p>
+                        </div>
+
+                        <!-- Estación 7 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="academi.png" alt="Juego de Clics / Mars Academy" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">7. Juego de Clics / Mars Academy</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">El Desafío Final. Programación de eventos y lógica en bloques en mBlock.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proyecto 2: Impulso Robótico -->
+            <div id="impulso">
+                <div class="grid md:grid-cols-2 gap-8 sm:gap-12 items-center mb-10">
+                    <div>
+                        <span class="inline-block bg-jahibe-azul/20 text-jahibe-azulClaro px-3 py-1 sm:px-4 sm:py-1 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-4">10MO "A" EGB · 21 ESTUDIANTES</span>
+                        <h3 class="text-[clamp(1.5rem,4vw,2.5rem)] font-futurista font-bold mb-3 sm:mb-4 text-jahibe-azulClaro text-shadow">IMPULSO ROBÓTICO</h3>
+                        <p class="italic text-jahibe-azulClaro font-semibold mb-4 sm:mb-6 text-sm sm:text-base">"Tecnología que piensa, actúa y transforma"</p>
+                        
+                        <p class="text-gray-200 text-base sm:text-lg mb-3 sm:mb-4 leading-relaxed">
+                            Los estudiantes actuarán como los <strong>"Embajadores de la Tecnología"</strong> de la institución. No solo exponen su nivel actual, sino que dan vida a los proyectos más significativos de toda su trayectoria escolar (desde 4to EGB hasta 3ro BGU).
+                        </p>
+                        <p class="text-gray-200 text-base sm:text-lg mb-4 sm:mb-6 leading-relaxed">
+                            En este espacio, la tecnología no es solo cables y metal; es una herramienta que <em>piensa</em> a través del código, <em>actúa</em> mediante la mecánica y <em>transforma</em> la vida de nuestra Smart City bajo el rigor de las Matemáticas. Presentamos 7 soluciones donde el algoritmo y el cálculo se encuentran para resolver los retos del futuro.
+                        </p>
+                    </div>
+
+                    <div class="rounded-xl overflow-hidden borde-luz">
+                        <img src="impulso.jpeg" alt="Impulso Robótico" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+
+                <!-- Estaciones Impulso Robótico -->
+                <div class="mt-12 sm:mt-16 bg-jahibe-gris/40 rounded-xl sm:rounded-2xl p-5 sm:p-8 borde-luz">
+                    <h4 class="text-center text-xl sm:text-2xl font-futurista font-semibold mb-6 sm:mb-10 text-jahibe-azulClaro">7 Estaciones / Stands · 3 estudiantes por grupo</h4>
+                    
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                        <!-- Estación 1 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="tornado.jpeg" alt="Simulador de Tornado" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">1. Simulador de Tornado</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Control con potenciómetro PlayShield. Cambio de color LED según intensidad. Maqueta LEGO.</p>
+                        </div>
+                        
+                        <!-- Estación 2 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="alertatemprana.jpeg" alt="Alerta Temprana" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">2. Alerta Temprana</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Sensores de humedad. Zumbador, luces de emergencia, pantalla OLED y conexión con App Inventor.</p>
+                        </div>
+                        
+                        <!-- Estación 3 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="anergiaazul.jpeg" alt="Energía Azul" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">3. Energía Azul</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Simulador de oleaje. Generación de energía limpia aplicando conceptos de ciencias naturales y robótica.</p>
+                        </div>
+                        
+                        <!-- Estación 4 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="granprix.jpeg" alt="Grand Prix Experience" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">4. Grand Prix Experience</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Escuela de conducción robótica. Recorrido por pistas con medición de tiempo.</p>
+                        </div>
+                        
+                        <!-- Estación 5 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="hogarinteligente.jpeg" alt="Hogar Inteligente" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">5. Hogar Inteligente</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Domótica con PlayIOT. Control de luces, ventilación y seguridad. Ahorro energético.</p>
+                        </div>
+                        
+                        <!-- Estación 6 -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="puenteelevadizo.jpeg" alt="Puente elevadizo inteligente" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">6. Puente elevadizo inteligente</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Proceso automático con sensor de ultrasonido: detecta embarcaciones, detiene el tráfico y eleva el puente para dar paso.</p>
+                        </div>
+                        
+                        <!-- Estación 7 - Excavadora con tamaño igual a las demás -->
+                        <div class="bg-jahibe-oscuro/60 p-4 sm:p-5 rounded-lg">
+                            <img src="excavadora.jpeg" alt="Excavadora Hidráulica" class="img-estacion">
+                            <h5 class="font-futurista font-bold text-base sm:text-lg mb-2">7. Excavadora Hidráulica</h5>
+                            <p class="text-gray-300 text-xs sm:text-sm">Brazo robótico con servomotores controlado por Joystick. Programado en MicroPython con interfaz de posiciones automáticas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería -->
+    <section id="galeria" class="py-16 px-4 sm:px-6 bg-jahibe-gris/30">
+        <div class="container mx-auto">
+            <h2 class="text-[clamp(1.6rem,5vw,3rem)] font-futurista font-bold text-center mb-8 text-shadow">
+                GALERÍA DE <span class="text-jahibe-naranja">PROYECTOS</span>
+            </h2>
+            <p class="text-center text-base sm:text-lg text-gray-200 max-w-3xl mx-auto mb-12">
+                Registro fotográfico de todo el proceso: construcción, pruebas, exposición y resultados finales de los proyectos realizados por los estudiantes.
+            </p>
+
+            <!-- 4 fotografías fijas -->
+            <h3 class="text-xl sm:text-2xl font-futurista font-semibold mb-6 text-jahibe-azulClaro">Destacados</h3>
+            <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+                <div class="overflow-hidden rounded-lg borde-luz">
+                    <img src="img1.jpeg" alt="Imagen 1" class="img-galeria">
+                </div>
+                <div class="overflow-hidden rounded-lg borde-luz">
+                    <img src="img2.jpeg" alt="Imagen 2" class="img-galeria">
+                </div>
+                <div class="overflow-hidden rounded-lg borde-luz">
+                    <img src="img3.jpeg" alt="Imagen 3" class="img-galeria">
+                </div>
+                <div class="overflow-hidden rounded-lg borde-luz">
+                    <img src="img4.jpeg" alt="Imagen 4" class="img-galeria">
+                </div>
+            </div>
+
+            <!-- Carrusel aleatorio con movimiento - CORREGIDO -->
+            <h3 class="text-xl sm:text-2xl font-futurista font-semibold mb-8 text-jahibe-azulClaro text-center">Galería completa</h3>
+            <div class="carrusel-contenedor">
+                <!-- Se generan las 30 imágenes dinámicamente -->
+                <script>
+                    // Generar las etiquetas de imagen
+                    const contenedor = document.currentScript.parentElement;
+                    for (let i = 1; i <= 30; i++) {
+                        const img = document.createElement('img');
+                        img.src = `img${i}.jpeg`;
+                        img.alt = `Imagen ${i} del proyecto`;
+                        img.className = 'carrusel-imagen';
+                        contenedor.appendChild(img);
+                    }
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agradecimiento -->
+    <section id="agradecimiento" class="py-16 px-4 sm:px-6 bg-gradient-to-b from-jahibe-gris/50 to-jahibe-oscuro">
+        <div class="container mx-auto max-w-4xl text-center">
+            <h2 class="text-[clamp(1.6rem,5vw,3rem)] font-futurista font-bold mb-8 sm:mb-10 text-shadow">
+                AGRADECIMIENTO
+            </h2>
+
+            <div class="bg-jahibe-gris/40 p-5 sm:p-8 md:p-10 rounded-xl sm:rounded-2xl borde-luz mb-8 sm:mb-12">
+                <p class="text-base sm:text-xl md:text-2xl text-gray-100 leading-relaxed mb-4 sm:mb-6 italic">
+                    "Quiero expresar mi más profundo agradecimiento y orgullo a cada uno de los estudiantes que, con dedicación, creatividad y esfuerzo, han hecho posible esta Casa Abierta.
+                </p>
+                <p class="text-base sm:text-xl md:text-2xl text-gray-100 leading-relaxed mb-4 sm:mb-6 italic">
+                    Desde los exploradores espaciales de 4to EGB hasta los embajadores tecnológicos de 10mo "A", todos han demostrado que son capaces de imaginar, construir y programar el futuro. Gracias por enseñarme a mí también, cada día, que la tecnología es pasión, lógica y corazón.
+                </p>
+                <p class="text-base sm:text-xl md:text-2xl text-gray-100 leading-relaxed italic">
+                    Gracias a las familias y a la institución Jahibé por confiar en la innovación educativa. ¡El futuro es de ustedes, y ya está aquí!"
+                </p>
+                <p class="text-jahibe-azulClaro font-futurista font-bold text-lg sm:text-xl mt-6 sm:mt-8">— Profe Iván<br/><span class="text-xs sm:text-sm text-gray-400">Docente del Área de Robótica e Informática</span></p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 sm:gap-8 text-left">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-futurista font-semibold mb-2 sm:mb-3 text-jahibe-naranja">Créditos y Reconocimientos</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm sm:text-base">
+                        <li>• Unidad Educativa Jahibé - Dirección General</li>
+                        <li>• Área de Tecnología, Robótica e Informática</li>
+                        <li>• Docentes de las áreas afines: Ciencias, Matemáticas, Inglés</li>
+                        <li>• Estudiantes de 4to EGB y 10mo "A" EGB - Protagonistas</li>
+                        <li>• Familias y comunidad educativa</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg sm:text-xl font-futurista font-semibold mb-2 sm:mb-3 text-jahibe-naranja">Tecnologías usadas en proyectos</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm sm:text-base">
+                        <li>• Programación: mBlock, MicroPython, App Inventor</li>
+                        <li>• Hardware: Arduino, PlayIOT, sensores y actuadores varios</li>
+                        <li>• Electrónica básica, circuitos y mecánica aplicada</li>
+                        <li>• Diseño e ingeniería educativa</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer con logo corregido -->
+    <footer class="bg-jahibe-oscuro py-6 sm:py-8 px-4 sm:px-6 border-t border-jahibe-azul/20">
+        <div class="container mx-auto text-center">
+            <img src="logo.png" alt="Jahibé 2026" class="h-12 sm:h-16 mx-auto mb-3 sm:mb-4 object-contain">
+            <p class="text-gray-400 mb-2 text-sm sm:text-base">© 2026 Unidad Educativa Jahibé · Área de Robótica e Informática</p>
+            <p class="text-gray-500 text-xs sm:text-sm">Quito - Ecuador</p>
+        </div>
+    </footer>
+
+    <!-- Script para navegación y carrusel aleatorio -->
+    <script>
+        // Navegación suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Carrusel aleatorio mejorado
+        const imagenes = document.querySelectorAll('.carrusel-imagen');
+        let imagenActiva = 0;
+
+        function cambiarImagenAleatoria() {
+            // Ocultar imagen actual
+            imagenes[imagenActiva].classList.remove('activa');
+            
+            // Generar índice aleatorio diferente al actual
+            let nuevaImagen;
+            do {
+                nuevaImagen = Math.floor(Math.random() * imagenes.length);
+            } while (nuevaImagen === imagenActiva);
+            
+            imagenActiva = nuevaImagen;
+            
+            // Mostrar nueva imagen
+            imagenes[imagenActiva].classList.add('activa');
+        }
+
+        // Iniciar carrusel: mostrar primera imagen y cambiar cada 3.5 segundos
+        if (imagenes.length > 0) {
+            imagenes[0].classList.add('activa');
+            setInterval(cambiarImagenAleatoria, 3500);
+        }
+    </script>
+</body>
+</html>
